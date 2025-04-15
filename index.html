@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <title>Danish Spellcheck Demo</title>
+</head>
+<body>
+  <h2>Søg</h2>
+  <input type="text" id="searchBox" placeholder="Skriv her..." style="width: 300px; padding: 5px;" />
+  <div id="suggestion" style="margin-top: 10px; color: green;"></div>
+
+  <script type="module">
+    import nspell from 'https://esm.sh/nspell'
+
+    const aff = await fetch('/da.aff').then(r => r.text())
+    const dic = await fetch('/da.dic').then(r => r.text())
+    const spell = nspell(aff, dic)
+
+    const input = document.getElementById('searchBox')
+    const suggestion = document.getElementById('suggestion')
+
+    input.addEventListener('input', () => {
+      const words = input.value.trim().split(/\s+/)
+      const corrections = []
+
+      for (let word of words) {
+        if (!spell.correct(word)) {
+          const suggs = spell.suggest(word)
+          if (suggs.length > 0) {
+            corrections.push(`"${word}" ➡ "${suggs[0]}"`)
+          }
+        }
+      }
+
+      suggestion.innerHTML = corrections.length > 0
+        ? `🔍 Forslag: ${corrections.join(', ')}`
+        : ''
+    })
+  </script>
+</body>
+</html>
