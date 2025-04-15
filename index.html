@@ -12,8 +12,8 @@
   <script type="module">
     import nspell from 'https://esm.sh/nspell'
 
-    const aff = await fetch('/da.aff?raw').then(r => r.text())
-    const dic = await fetch('/da.dic?raw').then(r => r.text())
+    const aff = await fetch('./da.aff?raw').then(r => r.text())
+    const dic = await fetch('./da.dic?raw').then(r => r.text())
     const spell = nspell(aff, dic)
 
     const input = document.getElementById('searchBox')
